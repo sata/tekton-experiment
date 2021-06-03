@@ -1,0 +1,31 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: git-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+    - name: input
+  tasks:
+    - name: fetch-repo
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/sata/tekton-experiment
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+    - name: test
+      taskRef:
+        name: promote
+      runAfter:
+        - fetch-repo
+      workspaces:
+        - name: source
+          workspace: shared-workspace

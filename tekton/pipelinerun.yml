@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: git-pipeline-run8
+spec:
+  serviceAccountName: git-service-account
+  pipelineRef:
+    name: git-pipeline
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: source-pvc
+    - name: input
+      configmap:
+        name: files
